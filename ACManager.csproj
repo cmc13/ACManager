@@ -41,7 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;VVS_REFERENCED, DECAL_INTEROP</DefineConstants>
+    <DefineConstants>VVS_REFERENCED, DECAL_INTEROP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Settings\BannedCharacterSettings.cs" />
     <Compile Include="Settings\BuffDefaults\Banes.cs" />
     <Compile Include="Settings\BuffDefaults\BotBuffs.cs" />
     <Compile Include="Settings\EquipmentSettings.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Settings\BuffDefaults\Light.cs" />
     <Compile Include="Settings\BotSettings.cs" />
     <Compile Include="Settings\InventorySettings.cs" />
+    <Compile Include="StateMachine\BannedMonarchCheck.cs" />
     <Compile Include="StateMachine\ChatManager.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Settings\CharacterSettings.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\BotManagerView.cs" />
     <Compile Include="Views\Tabs\AdvertisementsTab.cs" />
+    <Compile Include="Views\Tabs\BannedListTab.cs" />
     <Compile Include="Views\Tabs\ConfigTab.cs" />
     <Compile Include="Views\Tabs\EquipmentTab.cs" />
     <Compile Include="Views\Tabs\GemsTab.cs" />

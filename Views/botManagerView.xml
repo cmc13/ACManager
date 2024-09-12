@@ -163,5 +163,25 @@
         </page>
       </control>
     </page>
+
+    <page label="Banned List">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.StaticText" name="BannedCharLabel" left="5" top="10" width="95" height="16" text="Banned Characters:"/>
+        <control progid="decalcontrols.edit" name="BannedCharText" left="105" top="12" width="245" height="16" />
+        <control progid="decalcontrols.pushbutton" name="BannedCharAdd" left="355" top="10" width="40" height="20" text="Add" />
+        <control progid="decalcontrols.list" name="BannedCharList" left="5" top="35" width="390" height="155">
+          <column progid="decalcontrols.textcolumn" name="BannedCharListName" fixedwidth="332" />
+          <column progid="decalcontrols.iconcolumn" name="BannedCharListDeleteIcon" fixedwidth="16" />
+        </control>
+
+        <control progid="DecalControls.StaticText" name="BannedMonarchLabel" left="5" top="205" width="95" height="16" text="Banned Monarchs:"/>
+        <control progid="DecalControls.Edit" name="BannedMonarchText" left="105" top="207" width="245" height="16" />
+        <control progid="DecalControls.PushButton" name="BannedMonarchAdd" left="355" top="205" width="40" height="20" text="Add" />
+        <control progid="DecalControls.List" name="BannedMonarchList" left="5" top="230" width="390" height="155">
+          <column progid="DecalControls.TextColumn" name="BannedMonarchListName" fixedwidth="332" />
+          <column progid="DecalControls.IconColumn" name="BannedMonarchListDeleteIcon" fixedwidth="16" />
+        </control>
+      </control>
+    </page>
   </control>
 </view>

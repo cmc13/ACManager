@@ -29,12 +29,15 @@ namespace ACManager
         private static string EquipmentSettingsPath { get; set; }
         private static string GiftsFile { get { return "acm_gifts.log"; } }
         private static string GiftsPath { get; set; }
+        private static string BannedCharactersFile { get { return "banned_characters.xml"; } }
+        private static string BannedCharactersPath { get; set; }
         private static string BuffProfilesPath { get; set; }
         public static CharacterSettings CharacterSettings { get; set; } = new CharacterSettings();
         public static BotSettings BotSettings { get; set; } = new BotSettings();
         public static InventorySettings Inventory { get; set; } = new InventorySettings();
         public static List<BuffProfile> BuffProfiles { get; set; } = new List<BuffProfile>();
         public static EquipmentSettings EquipmentSettings { get; set; } = new EquipmentSettings();
+        public static BannedCharacterSettings BannedCharacterSettings { get; set; } = new BannedCharacterSettings();
 
         public static void Init(string path)
         {
@@ -44,6 +47,7 @@ namespace ACManager
             BotSettings = LoadBotSettings();
             Inventory = LoadInventories();
             EquipmentSettings = LoadEquipmentSettings();
+            BannedCharacterSettings = LoadBannedCharacterSettings();
             LoadBuffProfiles();
         }
 
@@ -63,6 +67,7 @@ namespace ACManager
                 BuffProfilesPath = Path.Combine(root, "BuffProfiles");
                 EquipmentSettingsPath = Path.Combine(AllSettingsPath, EquipmentSettingsFile);
                 GiftsPath = Path.Combine(AllSettingsPath, GiftsFile);
+                BannedCharactersPath = Path.Combine(AllSettingsPath, BannedCharactersFile);
             }
             catch (Exception ex) { Debug.LogException(ex); }
         }
@@ -383,6 +388,52 @@ namespace ACManager
             {
                 Debug.ToChat(ex.Message);
                 return null;
+            }
+        }
+
+        public static BannedCharacterSettings LoadBannedCharacterSettings()
+        {
+            try
+            {
+                if (File.Exists(BannedCharactersPath))
+                {
+                    using (var reader = new XmlTextReader(BannedCharactersPath))
+                    {
+                        var serializer = new XmlSerializer(typeof(BannedCharacterSettings));
+                        return (BannedCharacterSettings)serializer.Deserialize(reader);
+                    }
+                }
+                else
+                {
+                    return new BannedCharacterSettings();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Debug.ToChat(ex.Message);
+                return null;
+            }
+        }
+        public static void SaveBannedCharacterSettings()
+        {
+            try
+            {
+                if (SettingsPathCreateOrExists())
+                {
+                    using (XmlTextWriter writer = new XmlTextWriter(BannedCharactersPath, Encoding.UTF8))
+                    {
+                        writer.Formatting = Formatting.Indented;
+                        writer.WriteStartDocument();
+
+                        XmlSerializer xmlSerializer = new XmlSerializer(typeof(BannedCharacterSettings));
+                        xmlSerializer.Serialize(writer, BannedCharacterSettings);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.ToChat(ex.Message);
             }
         }
 
