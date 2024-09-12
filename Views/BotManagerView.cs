@@ -15,6 +15,7 @@ namespace ACManager.Views
         public AdvertisementsTab AdvertisementsTab { get; set; }
         public InventoryTab InventoryTab { get; set; }
         public EquipmentTab EquipmentTab { get; set; }
+        public BannedListTab BannedListTab { get; set; }
 
         public BotManagerView(Machine machine)
         {
@@ -32,6 +33,7 @@ namespace ACManager.Views
                 AdvertisementsTab = new AdvertisementsTab(this);
                 InventoryTab = new InventoryTab(this);
                 EquipmentTab = new EquipmentTab(this);
+                BannedListTab = new BannedListTab(this);
             }
             catch (Exception ex) { Debug.LogException(ex); }
         }

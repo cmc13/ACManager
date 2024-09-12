@@ -1,6 +1,7 @@
 ﻿using ACManager.Settings;
 using Decal.Adapter;
 using Decal.Filters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,7 +11,7 @@ namespace ACManager.StateMachine
     /// <summary>
     /// Class to control all chat parsing while the bot is in operation. This handles tells, general chat, sending tells, and broadcasting advertisements.
     /// </summary>
-    public class ChatManager
+    public partial class ChatManager
     {
         private Machine Machine { get; set; }
         private readonly Regex RegexLocal = new Regex("^<Tell:IIDString:(?<guid>\\d+):(?<name>.+?)>.*says, \"(?<message>.*)\"");
@@ -72,6 +73,40 @@ namespace ACManager.StateMachine
             string name = match.Groups["name"].Value;
             string message = match.Groups["message"].Value.ToLower();
 
+            // player not in range
+            var wo = CoreManager.Current.WorldFilter[guid];
+            if (wo == null)
+            {
+                Debug.ToChat(string.Format("{0} is not in range and will be ignored.", wo.Name));
+                return;
+            }
+
+            // check if player is banned
+            if (Utility.BannedCharacterSettings.BannedCharacters != null && Utility.BannedCharacterSettings.BannedCharacters.Count > 0)
+            {
+                foreach (var bannedChar in Utility.BannedCharacterSettings.BannedCharacters)
+                {
+                    if (string.Equals(bannedChar.Name, wo.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Debug.ToChat(string.Format("{0} has been banned and will be ignored.", wo.Name));
+                        return;
+                    }
+                }
+            }
+
+            // check if player's monarchy has been banned
+            if (Utility.BannedCharacterSettings.BannedMonarchs != null && Utility.BannedCharacterSettings.BannedMonarchs.Count > 0)
+            {
+                new BannedMonarchCheck(isTell, guid, name, message, HandleResponse);
+            }
+            else
+            {
+                HandleResponse(isTell, guid, name, message);
+            }
+        }
+
+        private void HandleResponse(bool isTell, int guid, string name, string message)
+        {
             switch (message)
             {
                 case "whereto":
@@ -161,7 +196,7 @@ namespace ACManager.StateMachine
                         }
 
                         SendTell(name, sb.ToString());
-                    }                    
+                    }
                     break;
                 case "cancel":
                     if (isTell)
@@ -228,7 +263,7 @@ namespace ACManager.StateMachine
                                     RequesterName = name,
                                     Destination = portal.Description,
                                     Heading = portal.Heading,
-                                    Character = Utility.CharacterSettings.Characters[i].Name                                    
+                                    Character = Utility.CharacterSettings.Characters[i].Name
                                 };
 
                                 if (portal.Type.Equals(PortalType.Primary))
@@ -280,7 +315,8 @@ namespace ACManager.StateMachine
                             if (string.IsNullOrEmpty(newRequest.Character))
                             {
                                 SendTell(name, $"It appears I've run out of {newRequest.Destination}.");
-                            } else
+                            }
+                            else
                             {
                                 Machine.AddToQueue(newRequest);
                             }
